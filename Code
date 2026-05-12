@@ -1,17 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration Form</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container{
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align: center;
+        }
+
+        input[type=text],
+        input[type=email],
+        select,
+        textarea{
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea{
+            resize: none;
+        }
+
+        .buttons{
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn{
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .submit{
+            background-color: green;
+        }
+
+        .reset{
+            background-color: red;
+        }
+
+        .output{
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+    </style>
 </head>
+
 <body>
 
 <?php
 
-$name = $email = $gender = $course = $message = "";
+$name = "";
+$email = "";
+$gender = "";
+$course = "";
+$message = "";
 $hobbies = [];
-$error = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     $name = htmlspecialchars($_POST["name"]);
     $email = htmlspecialchars($_POST["email"]);
@@ -19,107 +93,108 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $course = htmlspecialchars($_POST["course"]);
     $message = htmlspecialchars($_POST["message"]);
 
-    if(isset($_POST["hobbies"])) {
+    if(isset($_POST["hobbies"])){
         $hobbies = $_POST["hobbies"];
     }
-
-    // Validation
-    if (empty($name) || empty($email) || empty($gender) || empty($course)) {
-        $error = "Please fill in all required fields.";
-    } 
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Invalid email format.";
-    }
 }
+
 ?>
 
-<h2>Student Registration Form</h2>
+<div class="container">
 
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <h2>Student Registration Form</h2>
 
-    Name:
-    <input type="text" name="name" value="<?php echo $name; ?>" required>
-    <br><br>
+    <form method="POST">
 
-    Email:
-    <input type="email" name="email" value="<?php echo $email; ?>" required>
-    <br><br>
+        <label>Name:</label>
+        <input type="text" name="name" required>
 
-    Gender:
-    <input type="radio" name="gender" value="Male"
-    <?php if($gender == "Male") echo "checked"; ?>> Male
+        <label>Email:</label>
+        <input type="email" name="email" required>
 
-    <input type="radio" name="gender" value="Female"
-    <?php if($gender == "Female") echo "checked"; ?>> Female
-    <br><br>
+        <label>Gender:</label><br><br>
 
-    Course:
-    <select name="course" required>
-        <option value="">-- Select Course --</option>
+        <input type="radio" name="gender" value="Male" required>
+        Male
 
-        <option value="BSIT"
-        <?php if($course == "BSIT") echo "selected"; ?>>
-        BSIT
-        </option>
+        <input type="radio" name="gender" value="Female">
+        Female
 
-        <option value="BSCS"
-        <?php if($course == "BSCS") echo "selected"; ?>>
-        BSCS
-        </option>
+        <br><br>
 
-        <option value="BSA"
-        <?php if($course == "BSA") echo "selected"; ?>>
-        BSA
-        </option>
-    </select>
+        <label>Course:</label>
 
-    <br><br>
+        <select name="course" required>
 
-    Hobbies:
-    <input type="checkbox" name="hobbies[]" value="Reading"> Reading
-    <input type="checkbox" name="hobbies[]" value="Gaming"> Gaming
-    <input type="checkbox" name="hobbies[]" value="Sports"> Sports
+            <option value="">-- Select Course --</option>
+            <option value="BSIT">BSIT</option>
+            <option value="BSCS">BSCS</option>
+            <option value="BSA">BSA</option>
 
-    <br><br>
+        </select>
 
-    Message:
-    <br>
-    <textarea name="message" rows="5" cols="30"><?php echo $message; ?></textarea>
+        <label>Hobbies:</label><br><br>
 
-    <br><br>
+        <input type="checkbox" name="hobbies[]" value="Reading">
+        Reading
 
-    <input type="submit" value="Register">
-    <input type="reset" value="Reset">
+        <input type="checkbox" name="hobbies[]" value="Gaming">
+        Gaming
 
-</form>
+        <input type="checkbox" name="hobbies[]" value="Sports">
+        Sports
 
-<hr>
+        <br><br>
 
-<?php
+        <label>Message:</label>
 
-if ($error != "") {
+        <textarea name="message" rows="5"></textarea>
 
-    echo "<h3 style='color:red;'>$error</h3>";
+        <div class="buttons">
 
-} 
-elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+            <input type="submit" value="Register" class="btn submit">
 
-    echo "<h2>Registration Details</h2>";
+            <input type="reset" value="Reset" class="btn reset">
 
-    echo "<b>Name:</b> $name <br>";
-    echo "<b>Email:</b> $email <br>";
-    echo "<b>Gender:</b> $gender <br>";
-    echo "<b>Course:</b> $course <br>";
+        </div>
 
-    if (!empty($hobbies)) {
-        echo "<b>Hobbies:</b> " . implode(", ", $hobbies) . "<br>";
-    } else {
-        echo "<b>Hobbies:</b> None<br>";
-    }
+    </form>
 
-    echo "<b>Message:</b> $message";
-}
-?>
+    <?php
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+    ?>
+
+    <div class="output">
+
+        <h3>Registration Details</h3>
+
+        <p><strong>Name:</strong> <?php echo $name; ?></p>
+
+        <p><strong>Email:</strong> <?php echo $email; ?></p>
+
+        <p><strong>Gender:</strong> <?php echo $gender; ?></p>
+
+        <p><strong>Course:</strong> <?php echo $course; ?></p>
+
+        <p><strong>Hobbies:</strong>
+
+        <?php
+        if(!empty($hobbies)){
+            echo implode(", ", $hobbies);
+        } else {
+            echo "None";
+        }
+        ?>
+
+        </p>
+
+        <p><strong>Message:</strong> <?php echo $message; ?></p>
+
+    </div>
+
+    <?php } ?>
+
+</div>
 
 </body>
 </html>
